@@ -68,12 +68,7 @@ def view_urls(request):
 
     template = 'shorturl/view_urls.html'
 
-    """
-    db = get_db()
-    words = db.execute(
-        "SELECT word.id, word.name FROM word ORDER BY word.name "
-    ).fetchall()
-    return render_template("dictionary/dictionary.html", words=words)
-    """
+    data = ShortUrl.objects.all()
+    context = {'data': data}
 
-    return HttpResponse("sure")
+    return render(request, template, context)
