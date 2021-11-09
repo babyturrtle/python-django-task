@@ -12,8 +12,8 @@
 
 {% block content %}
     <form action="" class="main" method="post">
-        <label for="word">URL goes here!</label>
-        <input name="word" id="word" value="{{ form.long_url }}">
-        <input type="submit" value="Shorten">
+        <div class="word">URL goes here!</div>
+        <div id="word">{{ form.long_url }}</div>
+        <button class="button" type="submit">Shorten</button>
     </form>
 {% endblock %}

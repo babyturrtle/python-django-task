@@ -51,6 +51,18 @@ def url_shortener(request):
         return render(request, template, context)
 
 
+def view_shorturl(request, shortened_part):
+    """ Redirect to the created shortened url. """
+
+    try:
+        shorturl = ShortUrl.objects.get(short_url=shortened_part)
+        shorturl.clicks += 1
+        shorturl.save()
+        return HttpResponseRedirect(shorturl.long_url)
+    except:
+        raise Http404("We're sorry, this link is broken.")
+
+
 def view_urls(request):
     """ View all the shortened urls of a user. """
 
