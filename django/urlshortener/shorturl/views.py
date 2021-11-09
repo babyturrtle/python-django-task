@@ -1,5 +1,10 @@
+""" Url Shortener views. """
+
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404, HttpResponseRedirect
+
+from .models import ShortUrl
+from .forms import ShorturlForm
 
 
 def register(request):
@@ -26,10 +31,37 @@ def log_out(request):
 def url_shortener(request):
     """ Shorten the url on input. """
 
-    return HttpResponse("sfs")
+    template = 'shorturl/shorten_url.html'
+    context = {}
+    context['form'] = ShorturlForm()
+
+    if request.method == 'GET':
+        return render(request, template, context)
+    elif request.method == 'POST':
+        used_form = ShorturlForm(request.POST)
+        if used_form.is_valid():
+            shortened_object = used_form.save()
+            new_url = request.build_absolute_uri('/') + shortened_object.short_url
+            long_url = shortened_object.long_url
+            context['new_url'] = new_url
+            context['long_url'] = long_url
+
+            return render(request, template, context)
+        context['errors'] = used_form.errors
+        return render(request, template, context)
 
 
 def view_urls(request):
     """ View all the shortened urls of a user. """
+
+    template = 'shorturl/view_urls.html'
+
+    """
+    db = get_db()
+    words = db.execute(
+        "SELECT word.id, word.name FROM word ORDER BY word.name "
+    ).fetchall()
+    return render_template("dictionary/dictionary.html", words=words)
+    """
 
     return HttpResponse("sure")

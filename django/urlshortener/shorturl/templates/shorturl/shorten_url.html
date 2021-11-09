@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    <h1>{% block title %}Create a short URL{% endblock %}</h1>
+{% endblock %}
+
+{% block buttons %}
+    <ul>
+        <li><a href="{% url 'view_urls' %} }" class="button">View URLs</a></li>
+    </ul>
+{% endblock %}
+
+{% block content %}
+    <form action="" class="main" method="post">
+        <label for="word">URL goes here!</label>
+        <input name="word" id="word" value="{{ form.long_url }}">
+        <input type="submit" value="Shorten">
+    </form>
+{% endblock %}
