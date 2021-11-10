@@ -39,7 +39,7 @@ def url_shortener(request):
 
     elif request.method == 'POST':
         used_form = ShorturlForm(request.POST)
-        if used_form.is_valid():
+        if used_form.is_valid() and request.user.is_authenticated:
             shortened_object = used_form.save(commit=False)
             shortened_object.author = request.user
             shortened_object.save()
@@ -48,6 +48,8 @@ def url_shortener(request):
             context['new_url'] = new_url
             context['long_url'] = long_url
             return render(request, template, context)
+        else:
+            context['no_user'] = "Please register or log in to use the app"
         context['errors'] = used_form.errors
 
         return render(request, template, context)
