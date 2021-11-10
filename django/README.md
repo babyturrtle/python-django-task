@@ -36,4 +36,4 @@
 
 Полученное веб-приложение было задеплоено на Heroku: [https://django-task-shorturl.herokuapp.com/](https://django-task-shorturl.herokuapp.com/).
 
-<p align="center"><img src="shorturl.png" width="300"></p>
+<p align="center"><img src="shorturl.png" width="600"></p>
