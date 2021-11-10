@@ -31,3 +31,9 @@
 
 
 ### Выполнение
+
+Задание было выполнено, используя Python 3.8.7 и Django 3.2.9.
+
+Полученное веб-приложение было задеплоено на Heroku: [https://django-task-shorturl.herokuapp.com/](https://django-task-shorturl.herokuapp.com/).
+
+<p align="center"><img src="shorturl.png" width="300"></p>
