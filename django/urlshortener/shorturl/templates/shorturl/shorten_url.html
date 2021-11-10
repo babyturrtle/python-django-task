@@ -12,9 +12,16 @@
             <button class="button" type="submit">Shorten</button>
         </form>
     </div>
+
     {% if errors %}
       <div class="flash" role="alert">
         <p>{{errors}}</p>
+      </div>
+    {% endif %}
+
+    {% if no_user %}
+      <div class="centered" role="alert">
+        <p style="color: red;">{{no_user}}</p>
       </div>
     {% endif %}
 
