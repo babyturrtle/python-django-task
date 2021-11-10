@@ -1,4 +1,4 @@
-""" Utilities for url shortener. """
+"""Utilities for URL shortener"""
 
 from django.conf import settings
 from random import choice
@@ -10,16 +10,15 @@ AVAILABLE_CHARS = ascii_letters + digits
 
 
 def create_random_string(chars=AVAILABLE_CHARS):
-    """ Creates a random string with the predetermined size. """
+    """Creates a random string with the predetermined size"""
 
     return "".join([choice(chars) for _ in range(SIZE)])
 
 
 def shorten_url(model_instance):
-    """ Creates a shortened url. """
+    """Creates a shortened url and checks that it is unique"""
 
     random_string = create_random_string()
-
     model_class = model_instance.__class__
 
     if model_class.objects.filter(short_url=random_string).exists():

@@ -1,74 +1,78 @@
-""" Url Shortener views. """
+"""URL shortener views"""
 
-from django.shortcuts import render
-from django.http import HttpResponse, Http404, HttpResponseRedirect
+from django.shortcuts import render, redirect
+from django.http import Http404, HttpResponseRedirect
+from django.contrib.auth import login, authenticate
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.decorators import login_required
 
 from .models import ShortUrl
 from .forms import ShorturlForm
 
 
 def register(request):
-    """ Register a new user.
-        Validates that the username is not already taken.
-        Hashes the password for security.
-    """
+    """Register a new user"""
 
-    return HttpResponse("okay")
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=raw_password)
+            login(request, user)
+            return redirect('index')
+    else:
+        form = UserCreationForm()
 
-
-def log_in(request):
-    """ Log in a registered user by adding the user id to the session. """
-
-    return HttpResponse("yay")
-
-
-def log_out(request):
-    """ Clear the current session, including the stored user id. """
-
-    return HttpResponse("lsfs")
+    return render(request, 'registration/register.html', {'form': form})
 
 
 def url_shortener(request):
-    """ Shorten the url on input. """
+    """Shorten the url on input"""
 
     template = 'shorturl/shorten_url.html'
-    context = {}
-    context['form'] = ShorturlForm()
+    context = {'form': ShorturlForm()}
 
     if request.method == 'GET':
         return render(request, template, context)
+
     elif request.method == 'POST':
         used_form = ShorturlForm(request.POST)
         if used_form.is_valid():
-            shortened_object = used_form.save()
+            shortened_object = used_form.save(commit=False)
+            shortened_object.author = request.user
+            shortened_object.save()
             new_url = request.build_absolute_uri('/') + shortened_object.short_url
             long_url = shortened_object.long_url
             context['new_url'] = new_url
             context['long_url'] = long_url
-
             return render(request, template, context)
         context['errors'] = used_form.errors
+
         return render(request, template, context)
 
 
 def view_shorturl(request, shortened_part):
-    """ Redirect to the created shortened url. """
+    """Redirect to the original link from shortened url"""
 
     try:
         shorturl = ShortUrl.objects.get(short_url=shortened_part)
         shorturl.clicks += 1
         shorturl.save()
         return HttpResponseRedirect(shorturl.long_url)
-    except:
-        raise Http404("We're sorry, this link is broken.")
+
+    except ShortUrl.DoesNotExist:
+        raise Http404("Sorry, this link is broken.")
 
 
+@login_required
 def view_urls(request):
-    """ View all the shortened urls of a user. """
+    """View all the shortened urls of a logged-in user"""
 
-    template = 'shorturl/view_urls.html'
+    author = request.user
+    data = ShortUrl.objects.all().filter(author=author)
+    path = request.build_absolute_uri('/')
+    context = {'data': data, 'path': path}
 
-    data = ShortUrl.objects.all()
-    context = {'data': data}
-
-    return render(request, template, context)
+    return render(request, 'shorturl/view_urls.html', context)

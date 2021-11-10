@@ -1,31 +1,18 @@
-""" URL Shortener models. """
+"""URL shortener models"""
 
 from django.db import models
 from .utils import shorten_url
-
-"""
-class User(models.Model):
-
-    id = models.UUIDField()
-    username = models.CharField(max_length=15, unique=True)
-    password = models.CharField(max_length=25, unique=True)
-"""
+from django.contrib.auth.models import User
 
 
 class ShortUrl(models.Model):
-    """ Creates a short url from a given long one.
-
-        @short_url shortened link
-        @long_url the original link
-        @created date and time of short url creation
-        @clicks times the short url has been clicked on
-    """
+    """Creates a short url from a given long one"""
 
     short_url = models.CharField(max_length=15, unique=True, blank=True)
     long_url = models.URLField()
     created = models.DateTimeField(auto_now_add=True)
     clicks = models.PositiveIntegerField(default=0)
-    # user_id = models.ManyToOneRel()
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
 
     class Meta:
         ordering = ["-created"]

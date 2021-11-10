@@ -47,11 +47,19 @@ nav ul  {
   list-style: none;
   margin: 0;
   padding: 0;
+  align-items: center;
+  justify-content:center;
+}
+
+nav ul li {
+  justify-content:center;
+  text-align: center;
 }
 
 nav ul li a, nav ul li span, header .action {
   display: block;
   padding: 0.5rem;
+  margin: 4px 2px 4px 2px;
 }
 
 table {
@@ -115,7 +123,14 @@ th, td {
 input {
   padding: 8px 8px;
   font-size: 16px;
+}
+
+.url-form {
   width: 40em;
+}
+
+.helptext{
+  visibility: hidden;
 }
 
 .centered {
